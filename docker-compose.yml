@@ -7,10 +7,10 @@ services:
     container_name: logosorthos-db
     command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: magellan
-      MYSQL_USER: magellan
-      MYSQL_PASSWORD: magellanpass123
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
@@ -67,14 +67,14 @@ services:
       - ./directus/extensions:/directus/extensions
       - ./directus/database:/directus/database
     environment:
-      KEY: "replace-with-random-value"
-      SECRET: "replace-with-random-value"
-      ADMIN_EMAIL: "justinzjones@hotmail.com"
-      ADMIN_PASSWORD: "Kippercat1!"
-      DB_CLIENT: "sqlite3"
-      DB_FILENAME: "/directus/database/data.db"
-      WEBSOCKETS_ENABLED: "true"
-      PUBLIC_URL: "http://localhost:8055"
+      KEY: ${DIRECTUS_KEY}
+      SECRET: ${DIRECTUS_SECRET}
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+      DB_CLIENT: ${DIRECTUS_DB_CLIENT}
+      DB_FILENAME: ${DIRECTUS_DB_FILENAME}
+      WEBSOCKETS_ENABLED: ${DIRECTUS_WEBSOCKETS_ENABLED}
+      PUBLIC_URL: ${DIRECTUS_PUBLIC_URL}
     depends_on:
       db:
         condition: service_healthy

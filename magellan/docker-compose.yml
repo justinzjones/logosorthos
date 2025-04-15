@@ -1,0 +1,79 @@
+version: '3'
+services:
+  # Laravel Application
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: magellan-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - magellan-network
+
+  # Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: magellan-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - magellan-network
+
+  # MySQL Service
+  db:
+    image: mysql:8.0
+    container_name: magellan-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+    volumes:
+      - dbdata:/var/lib/mysql/
+    networks:
+      - magellan-network
+
+  # Directus CMS
+  directus:
+    image: directus/directus:9
+    container_name: magellan-directus
+    restart: unless-stopped
+    ports:
+      - "8055:8055"
+    environment:
+      KEY: ${DIRECTUS_KEY}
+      SECRET: ${DIRECTUS_SECRET}
+      DB_CLIENT: "mysql"
+      DB_HOST: "db"
+      DB_PORT: "3306"
+      DB_DATABASE: ${DIRECTUS_DB_DATABASE}
+      DB_USER: ${DIRECTUS_DB_USER}
+      DB_PASSWORD: ${DIRECTUS_DB_PASSWORD}
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+      PUBLIC_URL: ${DIRECTUS_PUBLIC_URL}
+    volumes:
+      - directus-uploads:/directus/uploads
+    networks:
+      - magellan-network
+    depends_on:
+      - db
+
+networks:
+  magellan-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
+  directus-uploads:
+    driver: local 

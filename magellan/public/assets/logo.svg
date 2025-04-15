@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 35 96 55" fill="none">
+  <!-- Semi-circular Sun behind the mountains -->
+  <path d="M10 80 A40 40 0 0 1 90 80" fill="skyblue" />
+
+  <!-- Mountains -->
+  <path d="M10 80 L40 50 L70 80 Z" fill="darkslategray"></path>
+  <path d="M30 80 L60 55 L90 80 Z" fill="forestgreen"></path>
+</svg>

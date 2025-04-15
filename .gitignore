@@ -1,0 +1,38 @@
+# Laravel specific
+/magellan/node_modules
+/magellan/public/build
+/magellan/public/hot
+/magellan/public/storage
+/magellan/storage/*.key
+/magellan/vendor
+/magellan/.env.backup
+/magellan/.env.production
+/magellan/.phpunit.result.cache
+/magellan/Homestead.json
+/magellan/Homestead.yaml
+/magellan/npm-debug.log
+/magellan/yarn-error.log
+
+# Directus specific
+/directus/uploads/*
+/directus/database/*
+/directus/extensions/*
+!/directus/uploads/.gitkeep
+!/directus/database/.gitkeep
+!/directus/extensions/.gitkeep
+
+# Docker and environment files
+.env
+.env.local
+.env.backup
+.docker/.env
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# IDE directories
+.idea
+.vscode
+*.sublime-workspace
+*.sublime-project 

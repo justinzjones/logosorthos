@@ -6,7 +6,7 @@
     
     @if(isset($article->featured_image))
     <figure class="mt-6">
-      <img src="http://localhost:8055/assets/{{ $article->featured_image }}" alt="{{ $article->title }}" class="rounded-lg w-full max-h-[500px] object-cover">
+      <img src="{{ directus_asset($article->featured_image) }}" alt="{{ $article->title }}" class="rounded-lg w-full max-h-[500px] object-cover">
     </figure>
     @endif
     

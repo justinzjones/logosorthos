@@ -11,7 +11,7 @@
       <div class="overflow-hidden relative rounded-lg border border-gray-100 transition-all hover:shadow-md">
         <div class="aspect-[16/9] overflow-hidden bg-gray-100" style="border-bottom-left-radius: 0 !important; border-bottom-right-radius: 0 !important;">
           @if(isset($article->featured_image))
-            <img src="http://localhost:8055/assets/{{ $article->featured_image }}"
+            <img src="{{ directus_asset($article->featured_image) }}"
                  alt="{{ $article->title }}"
                  class="object-cover w-full h-full transition-all duration-300 group-hover:scale-105" style="border-bottom-left-radius: 0 !important; border-bottom-right-radius: 0 !important;">
           @elseif(isset($article->image))

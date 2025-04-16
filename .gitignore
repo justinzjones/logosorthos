@@ -35,4 +35,4 @@ Thumbs.db
 .idea
 .vscode
 *.sublime-workspace
-*.sublime-project 
+*.sublime-project /magellan/.env.docker

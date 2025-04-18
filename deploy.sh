@@ -39,9 +39,9 @@ git push
 echo -e "${YELLOW}Deploying to production server...${NC}"
 ssh $REMOTE_SERVER "cd $REMOTE_PATH && git pull"
 
-# Step 4: Clear caches on the server
+# Step 4: Clear caches on the server using Docker
 echo -e "${YELLOW}Clearing server caches...${NC}"
-ssh $REMOTE_SERVER "cd $REMOTE_PATH/magellan && php artisan cache:clear && php artisan view:clear && php artisan config:clear && php artisan route:clear"
+ssh $REMOTE_SERVER "cd $REMOTE_PATH && docker exec logosorthos-app php artisan cache:clear && docker exec logosorthos-app php artisan view:clear && docker exec logosorthos-app php artisan config:clear && docker exec logosorthos-app php artisan route:clear"
 
 # Step 5: Restart containers if needed
 echo -e "${YELLOW}Restarting server containers...${NC}"

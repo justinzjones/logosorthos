@@ -37,7 +37,8 @@ git push
 
 # Step 3: SSH to server and pull changes
 echo -e "${YELLOW}Deploying to production server...${NC}"
-ssh $REMOTE_SERVER "cd $REMOTE_PATH && git pull"
+# First, save any local changes on the server
+ssh $REMOTE_SERVER "cd $REMOTE_PATH && git stash --include-untracked && git pull && git stash pop || true"
 
 # Step 4: Clear caches on the server using Docker
 echo -e "${YELLOW}Clearing server caches...${NC}"

@@ -1,5 +1,16 @@
 {
   "dependencies": {
-    "axios": "^1.8.4"
-  }
+    "axios": "^1.8.4",
+    "dotenv": "^16.5.0"
+  },
+  "name": "logosorthos",
+  "version": "1.0.0",
+  "description": "This repository contains both the Magellan Laravel application and Directus CMS for the Logosorthos project.",
+  "main": "create-collections.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

@@ -36,3 +36,6 @@ Route::middleware([
 
 Route::get('discovery/country/{id}', [TravelController::class, 'show_country']);
 Route::get('discovery/region/{id}', [TravelController::class, 'show_region']);
+
+// Include test routes
+include_once __DIR__ . '/test.php';

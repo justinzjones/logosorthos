@@ -171,7 +171,7 @@
   </div>
 
   <!-- Email Signup -->
-  <div class="py-12 mt-6 bg-hippie-blue-50">
+  <!-- <div class="py-12 mt-6 bg-hippie-blue-50">
     <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
       <div class="p-8 rounded-xl bg-hippie-blue-100 md:p-10 lg:flex lg:items-center lg:justify-between">
         <div class="lg:w-2/3">
@@ -186,7 +186,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <x-footer/>
 

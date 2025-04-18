@@ -1,7 +1,7 @@
 <div>
     <!-- Always remember that you are absolutely unique. Just like everyone else. - Margaret Mead -->
-    <footer class="border-t bg-gray-50 border-gray-900/10">
-    <div class="px-6 py-20 mx-auto overflow-hidden max-w-7xl sm:py-24 lg:px-8">
+    <footer class="bg-gray-50 border-t border-gray-900/10">
+    <div class="overflow-hidden px-6 py-20 mx-auto max-w-7xl sm:py-24 lg:px-8">
     <!-- <nav class="-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12" aria-label="Footer">
       <div class="pb-6">
         <a href="#" class="text-sm leading-6 text-gray-600 hover:text-gray-900">About</a>
@@ -54,7 +54,7 @@
         </svg>
       </a>
     </div> -->
-    <p class="mt-10 text-xs leading-5 text-center text-gray-500">&copy; {{ now()->year }} Magellan.org - All rights reserved.</p>
+    <p class="mt-10 text-xs leading-5 text-center text-gray-500">&copy; {{ now()->year }} logosorthos.com - All rights reserved.</p>
     </div>
     </footer>
 </div>

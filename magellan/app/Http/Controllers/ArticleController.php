@@ -5,14 +5,30 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class ArticleController extends Controller
 {
     protected $baseUrl;
+    protected $accessToken;
+    protected $maxRetries = 2;
     
     public function __construct()
     {
         $this->baseUrl = env('DIRECTUS_API_URL', 'http://directus:8055') . '/items/articles';
+        $this->getAccessToken();
+    }
+
+    /**
+     * Get an access token from Directus for API requests
+     */
+    protected function getAccessToken()
+    {
+        // Use the static API token directly from environment variables
+        $this->accessToken = env('DIRECTUS_API_TOKEN', 'public_access_token');
+        
+        // Log the token being used (be careful with this in production)
+        Log::info('Using Directus API token: ' . $this->accessToken);
     }
 
     public function index()
@@ -100,10 +116,14 @@ class ArticleController extends Controller
         $url = "{$this->baseUrl}/{$article}?fields=id,title,content,date_created,featured_image,image,category.name,author.last_name,author.first_name,author.avatar";
         
         Log::info("Fetching article", ['url' => $url]);
-        $response = Http::get($url);
+        $response = Http::withToken($this->accessToken)->get($url);
 
         if ($response->failed() || !$response->json('data')) {
-            Log::error("Article not found", ['id' => $article, 'status' => $response->status()]);
+            Log::error('Article not found or request failed', [
+                'id' => $article,
+                'status' => $response->status(),
+                'response' => $response->body()
+            ]);
             abort(404, 'Article not found');
         }
 
@@ -143,11 +163,11 @@ class ArticleController extends Controller
 
     private function fetchArticles(string $url)
     {
-        $response = Http::get($url);
+        $response = Http::withToken($this->accessToken)->get($url);
 
         if ($response->failed()) {
             Log::error('Failed to fetch articles', ['url' => $url, 'status' => $response->status()]);
-            abort(500, 'Failed to fetch articles');
+            return [];
         }
 
         // Convert the data array to objects

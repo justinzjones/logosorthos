@@ -48,4 +48,7 @@ ssh $REMOTE_SERVER "cd $REMOTE_PATH && docker exec logosorthos-app php artisan c
 echo -e "${YELLOW}Restarting server containers...${NC}"
 ssh $REMOTE_SERVER "docker restart logosorthos-app logosorthos-nginx"
 
+# SSH to the server and run npm build
+ssh root@88.198.107.196 "cd /var/www/logosorthos/magellan && npm run build"
+
 echo -e "${GREEN}Deployment completed successfully!${NC}" 

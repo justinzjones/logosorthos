@@ -54,7 +54,7 @@
         </svg>
       </a>
     </div> -->
-    <p class="mt-10 text-xs leading-5 text-center text-gray-500">&copy; {{ now()->year }} logosorthos.com - All rights reserved.</p>
+    <p class="mt-10 text-xs leading-5 text-center text-gray-500">&copy; {{ now()->year }} logosorthos.com - All rights reserved</p>
     </div>
     </footer>
 </div>

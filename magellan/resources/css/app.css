@@ -12,10 +12,14 @@
     }
 
     img {
-        @apply rounded-xl bg-gray-50;
+        @apply bg-gray-50 rounded-xl;
     }
 
     figcaption {
-        @apply flex mt-4 text-sm leading-6 text-gray-500 gap-x-2;
+        @apply flex gap-x-2 mt-4 text-sm leading-6 text-gray-500;
     }
+
+    /* p {
+        @apply text-lg;
+    } */
 }

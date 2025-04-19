@@ -74,6 +74,12 @@ export default {
                             borderRadius: '0.25rem', // rounded
                             fontWeight: '500',
                         },
+                        p: {
+                            fontSize: '1.0625rem',
+                        },
+                        li: {
+                            fontSize: '1.0625rem',
+                        },
                     },
                 },
             },

@@ -17,6 +17,10 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+        <!-- Google Ads --> 
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1263252672540070"
+        crossorigin="anonymous"></script>
+
 
         <!-- Styles -->
         @livewireStyles

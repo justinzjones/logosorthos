@@ -19,7 +19,4 @@
         @apply flex gap-x-2 mt-4 text-sm leading-6 text-gray-500;
     }
 
-    /* p {
-        @apply text-lg;
-    } */
 }

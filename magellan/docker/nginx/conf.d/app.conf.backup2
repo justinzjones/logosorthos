@@ -1,5 +1,4 @@
 server {
-    client_max_body_size 100M;
     listen 80;
     server_name logosorthos.com;
     index index.php index.html;
@@ -24,7 +23,6 @@ server {
 }
 
 server {
-    client_max_body_size 100M;
     listen 80;
     server_name localhost;
     index index.php index.html;

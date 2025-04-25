@@ -70,61 +70,79 @@ if (!function_exists('insert_ads_in_content')) {
      */
     function insert_ads_in_content($content) 
     {
-        // Remove any existing HTML comments
-        $content = preg_replace('/<!--.*?-->/s', '', $content);
+        // Check if the content is empty
+        if (empty($content)) {
+            return $content;
+        }
+
+        // Load content into DOMDocument for proper HTML parsing
+        $dom = new DOMDocument();
+        // Preserve UTF-8 encoding
+        $dom->encoding = 'UTF-8';
         
-        // Split content by paragraphs (basic approach)
-        $paragraphs = preg_split('/<\/p>\s*<p[^>]*>/i', $content);
+        // Use error suppression to avoid warnings about HTML5 tags
+        @$dom->loadHTML('<?xml encoding="UTF-8">' . $content);
         
-        // If less than 3 paragraphs, just return original content
-        if (count($paragraphs) < 3) {
+        // Get all paragraph and heading elements (better measure of content sections)
+        $xpath = new DOMXPath($dom);
+        $nodes = $xpath->query('//p|//h1|//h2|//h3|//h4|//h5|//h6');
+        
+        $totalNodes = $nodes->length;
+        
+        // If very few content nodes, just return original content
+        if ($totalNodes < 4) {
             return $content;
         }
         
-        // The total number of paragraphs
-        $totalParagraphs = count($paragraphs);
-        
         // Calculate position to insert first ad (approximately 1/3 through content)
-        $firstAdPosition = max(1, floor($totalParagraphs / 3));
+        $firstAdPosition = max(2, intval($totalNodes / 3)); // Avoid placing too early
         
         // Calculate position to insert second ad (approximately 2/3 through content)
-        $secondAdPosition = max($firstAdPosition + 1, floor($totalParagraphs * 2 / 3));
+        $secondAdPosition = max($firstAdPosition + 2, intval($totalNodes * 2 / 3));
         
         // Get the ad HTML
         $adHtml = get_ad_html();
         
-        // Insert ads at calculated positions
-        $result = '';
+        // Create ad nodes
+        $firstAd = $dom->createDocumentFragment();
+        $firstAd->appendXML($adHtml);
         
-        for ($i = 0; $i < $totalParagraphs; $i++) {
-            // Add the paragraph
-            $result .= $paragraphs[$i];
-            
-            // Add paragraph closing/opening tags if this isn't the last paragraph
-            if ($i < $totalParagraphs - 1) {
-                $result .= '</p><p>';
-            }
-            
-            // Add first ad after the firstAdPosition paragraph
-            if ($i == $firstAdPosition) {
-                $result .= '</p>' . $adHtml . '<p>';
-            }
-            
-            // Add second ad after the secondAdPosition paragraph
-            if ($i == $secondAdPosition && $secondAdPosition != $firstAdPosition) {
-                $result .= '</p>' . $adHtml . '<p>';
+        $secondAd = $dom->createDocumentFragment();
+        $secondAd->appendXML($adHtml);
+        
+        // Insert ad after the specified node positions
+        if ($firstAdPosition < $totalNodes) {
+            $node = $nodes->item($firstAdPosition);
+            if ($node && $node->parentNode) {
+                $node->parentNode->insertBefore($firstAd, $node->nextSibling);
             }
         }
         
-        // Make sure content is properly wrapped in paragraph tags
-        if (!preg_match('/^<p/i', $result)) {
-            $result = '<p>' . $result;
-        }
-        if (!preg_match('/<\/p>$/i', $result)) {
-            $result .= '</p>';
+        // Get the nodes again since DOM has been modified
+        $nodes = $xpath->query('//p|//h1|//h2|//h3|//h4|//h5|//h6');
+        
+        if ($secondAdPosition < $nodes->length && $secondAdPosition != $firstAdPosition) {
+            $node = $nodes->item($secondAdPosition);
+            if ($node && $node->parentNode) {
+                $node->parentNode->insertBefore($secondAd, $node->nextSibling);
+            }
         }
         
-        return $result;
+        // Extract the body content
+        $body = $dom->getElementsByTagName('body')->item(0);
+        $content = '';
+        
+        if ($body) {
+            $children = $body->childNodes;
+            foreach ($children as $child) {
+                $content .= $dom->saveHTML($child);
+            }
+        }
+        
+        // Remove XML encoding declaration
+        $content = str_replace('<?xml encoding="UTF-8">', '', $content);
+        
+        return $content;
     }
 }
 

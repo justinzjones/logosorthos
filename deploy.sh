@@ -10,6 +10,7 @@ NC='\033[0m' # No Color
 REMOTE_SERVER="root@88.198.107.196"
 REMOTE_PATH="/var/www/logosorthos"
 COMMIT_MESSAGE=$1
+BRANCH="stable_version"  # Use the stable version branch instead of main
 
 # Check if commit message was provided
 if [ -z "$COMMIT_MESSAGE" ]; then
@@ -33,12 +34,12 @@ echo -e "${YELLOW}Committing with message: ${NC}\"$COMMIT_MESSAGE\""
 git commit -m "$COMMIT_MESSAGE"
 
 echo -e "${YELLOW}Pushing to remote repository...${NC}"
-git push
+git push origin $BRANCH
 
 # Step 3: SSH to server and pull changes
 echo -e "${YELLOW}Deploying to production server...${NC}"
 # First, save any local changes on the server
-ssh $REMOTE_SERVER "cd $REMOTE_PATH && git stash --include-untracked && git pull && git stash pop || true"
+ssh $REMOTE_SERVER "cd $REMOTE_PATH && git stash --include-untracked && git checkout $BRANCH && git pull origin $BRANCH && git stash pop || true"
 
 # Step 4: Clear caches on the server using Docker
 echo -e "${YELLOW}Clearing server caches...${NC}"

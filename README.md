@@ -94,7 +94,30 @@ docker compose exec app npm run dev
 
 ## Deployment
 
-For production deployment:
+### Using the deploy.sh script
+
+The simplest way to deploy changes to the production server:
+
+```bash
+# Make and test your changes locally
+# Navigate to the logosorthos directory
+cd /Users/justinjones/myapps/logosorthos
+
+# Run the deployment script with a commit message
+./deploy.sh "Your commit message describing the changes"
+```
+
+This script will:
+1. Clear Laravel caches locally
+2. Commit your changes to git with the provided message
+3. Push to the remote repository
+4. Pull the changes on the production server
+5. Clear caches on the server
+6. Restart the necessary containers
+
+### Manual Production Deployment
+
+For full production deployment:
 
 1. Update environment variables in docker-compose.yml and .env files:
    - Set stronger passwords

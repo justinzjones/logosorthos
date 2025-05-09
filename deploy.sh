@@ -40,25 +40,15 @@ echo -e "${YELLOW}Deploying to production server...${NC}"
 # First, save any local changes on the server
 ssh $REMOTE_SERVER "cd $REMOTE_PATH && git stash --include-untracked && git pull && git stash pop || true"
 
-# Step 4: Get the actual app container name on the server (handles container ID changes)
-echo -e "${YELLOW}Getting server container names...${NC}"
-APP_CONTAINER=$(ssh $REMOTE_SERVER "docker ps --format '{{.Names}}' | grep logosorthos-app")
-if [ -z "$APP_CONTAINER" ]; then
-    echo -e "${RED}Error: Could not find app container on server${NC}"
-    exit 1
-fi
-echo -e "${GREEN}Found app container: $APP_CONTAINER${NC}"
-
-# Step 5: Clear caches on the server using Docker
+# Step 4: Clear caches on the server using Docker
 echo -e "${YELLOW}Clearing server caches...${NC}"
-ssh $REMOTE_SERVER "cd $REMOTE_PATH && docker exec $APP_CONTAINER php artisan cache:clear && docker exec $APP_CONTAINER php artisan view:clear && docker exec $APP_CONTAINER php artisan config:clear && docker exec $APP_CONTAINER php artisan route:clear"
+ssh $REMOTE_SERVER "cd $REMOTE_PATH && docker exec logosorthos-app php artisan cache:clear && docker exec logosorthos-app php artisan view:clear && docker exec logosorthos-app php artisan config:clear && docker exec logosorthos-app php artisan route:clear"
 
-# Step 6: Restart containers if needed
+# Step 5: Restart containers if needed
 echo -e "${YELLOW}Restarting server containers...${NC}"
-ssh $REMOTE_SERVER "docker restart $APP_CONTAINER logosorthos-nginx"
+ssh $REMOTE_SERVER "docker restart logosorthos-app logosorthos-nginx"
 
-# Step a7: Run npm build on the server if needed
-echo -e "${YELLOW}Building assets on server...${NC}"
-ssh $REMOTE_SERVER "cd $REMOTE_PATH/magellan && docker exec $APP_CONTAINER npm run build || echo 'Skipping npm build, not available in container'"
+# SSH to the server and run npm build
+ssh root@88.198.107.196 "cd /var/www/logosorthos/magellan && npm run build"
 
 echo -e "${GREEN}Deployment completed successfully!${NC}" 

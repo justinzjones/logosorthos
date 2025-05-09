@@ -1,0 +1,94 @@
+version: "3.8"
+
+services:
+  # MySQL Database (shared between Laravel and Directus)
+  db:
+    image: mysql:8.0
+    container_name: logosorthos-db
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+    networks:
+      - logosorthos-network
+    restart: unless-stopped
+
+  # Laravel Application
+  app:
+    build:
+      context: ./magellan
+      dockerfile: ./docker/Dockerfile
+    container_name: logosorthos-app
+    working_dir: /var/www/html
+    ports:
+      - "9001:9000"
+      - "5173:5173"
+    volumes:
+      - ./magellan:/var/www/html
+      - ./magellan/storage/logs:/var/www/html/storage/logs
+    depends_on:
+      - db
+    networks:
+      logosorthos-network:
+        aliases:
+          - app
+    restart: unless-stopped
+
+  # Nginx Web Server
+  webserver:
+    image: nginx:alpine
+    container_name: logosorthos-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./magellan:/var/www/html
+      - ./magellan/docker/nginx/conf.d/:/etc/nginx/conf.d/
+    depends_on:
+      - app
+    networks:
+      - logosorthos-network
+    restart: unless-stopped
+
+  # Directus CMS
+  directus:
+    image: directus/directus:10.10.5
+    container_name: logosorthos-directus
+    ports:
+      - "8055:8055"
+    volumes:
+      - ./directus/uploads:/directus/uploads
+      - ./directus/extensions:/directus/extensions
+      - ./directus/database:/directus/database
+    environment:
+      KEY: ${DIRECTUS_KEY}
+      SECRET: ${DIRECTUS_SECRET}
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+      DB_CLIENT: ${DIRECTUS_DB_CLIENT}
+      DB_FILENAME: ${DIRECTUS_DB_FILENAME}
+      WEBSOCKETS_ENABLED: ${DIRECTUS_WEBSOCKETS_ENABLED}
+      PUBLIC_URL: ${DIRECTUS_PUBLIC_URL}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - logosorthos-network
+    restart: unless-stopped
+
+networks:
+  logosorthos-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local

@@ -25,6 +25,7 @@
 .env
 .env.local
 .env.backup
+.env.bak
 .docker/.env
 
 # System Files

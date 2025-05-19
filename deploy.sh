@@ -45,11 +45,18 @@ ssh $REMOTE_SERVER "cd $REMOTE_PATH && git stash --include-untracked && git chec
 echo -e "${YELLOW}Clearing server caches...${NC}"
 ssh $REMOTE_SERVER "cd $REMOTE_PATH && docker exec logosorthos-app php artisan cache:clear && docker exec logosorthos-app php artisan view:clear && docker exec logosorthos-app php artisan config:clear && docker exec logosorthos-app php artisan route:clear"
 
-# Step 5: Restart containers if needed
+# Step 5: Run database migrations
+echo -e "${YELLOW}Running database migrations...${NC}"
+ssh $REMOTE_SERVER "cd $REMOTE_PATH && docker exec logosorthos-app php artisan migrate --force"
+
+# Step 6: Restart containers if needed
 echo -e "${YELLOW}Restarting server containers...${NC}"
 ssh $REMOTE_SERVER "docker restart logosorthos-app logosorthos-nginx"
 
 # SSH to the server and run npm build
 ssh root@88.198.107.196 "cd /var/www/logosorthos/magellan && npm run build"
 
-echo -e "${GREEN}Deployment completed successfully!${NC}" 
+echo -e "${GREEN}Deployment completed successfully!${NC}"
+
+# Remove old host key
+#ssh-keygen -R 88.198.107.196 

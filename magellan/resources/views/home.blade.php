@@ -13,7 +13,7 @@
               <a href="{{ $articles[0]->category->name }}/articles/{{ $articles[0]->id }}" class="group">
                 <div class="relative aspect-[16/9] overflow-hidden rounded-lg bg-gray-200">
                   @if(isset($articles[0]->featured_image))
-                    <img src="http://localhost:8055/assets/{{ $articles[0]->featured_image }}" 
+                    <img src="{{ directus_asset($articles[0]->featured_image) }}" 
                          alt="{{ $articles[0]->title }}" 
                          class="object-cover w-full h-full transition-all duration-300 group-hover:scale-105">
                   @elseif(isset($articles[0]->image))
@@ -44,7 +44,7 @@
                   <div class="flex overflow-hidden h-full bg-white rounded-lg border border-gray-200 transition-all hover:shadow-md">
                     <div class="flex-shrink-0 w-1/3 bg-gray-100" style="border-top-right-radius: 0 !important; border-bottom-right-radius: 0 !important;">
                       @if(isset($article->featured_image))
-                        <img src="http://localhost:8055/assets/{{ $article->featured_image }}" 
+                        <img src="{{ directus_asset($article->featured_image) }}" 
                              alt="{{ $article->title }}" 
                              class="object-cover w-full h-full" style="border-top-right-radius: 0 !important; border-bottom-right-radius: 0 !important;">
                       @elseif(isset($article->image))
@@ -106,7 +106,7 @@
           <a href="{{ $article->category->name }}/articles/{{ $article->id }}" class="block group">
             <div class="overflow-hidden relative bg-gray-100 rounded-lg aspect-square">
               @if(isset($article->featured_image))
-                <img src="http://localhost:8055/assets/{{ $article->featured_image }}"
+                <img src="{{ directus_asset($article->featured_image) }}"
                      alt="{{ $article->title }}"
                      class="object-cover w-full h-full">
               @elseif(isset($article->image))
